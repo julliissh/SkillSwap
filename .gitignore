@@ -1,0 +1,33 @@
+﻿# .NET / Visual Studio
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.idea/
+*.DotSettings.user
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+next-env.d.ts
+*.log
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Database & OS
+*.db
+*.sqlite
+.DS_Store
+Thumbs.db
+
+# Generated files
+AGENTS.md
