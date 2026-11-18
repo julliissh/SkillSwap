@@ -1,10 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
 public class SkillSwapDbContext : DbContext
 {
-    public SkillSwapDbContext(DbContextOptions<SkillSwapDbContext> options) : base(options)
+    public SkillSwapDbContext(DbContextOptions<SkillSwapDbContext> options)
+        : base(options)
     {
+    }
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(254);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.PasswordHash)
+            .IsRequired();
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Status)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<Profile>()
+            .Property(p => p.DisplayName)
+            .HasMaxLength(100);
+
+        modelBuilder.Entity<Profile>()
+            .Property(p => p.Bio)
+            .HasMaxLength(1000);
+
+        modelBuilder.Entity<Profile>()
+            .Property(p => p.AvatarUrl)
+            .HasMaxLength(500);
+
+        modelBuilder.Entity<Profile>()
+            .HasOne<User>()
+            .WithOne(user => user.Profile)
+            .HasForeignKey<Profile>(profile => profile.UserId);
     }
 }
