@@ -12,6 +12,7 @@ public class SkillSwapDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Profile> Profiles { get; set; }
+    public DbSet<EmailToken> EmailTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,5 +57,29 @@ public class SkillSwapDbContext : DbContext
             .HasOne<User>()
             .WithOne(user => user.Profile)
             .HasForeignKey<Profile>(profile => profile.UserId);
+
+        modelBuilder.Entity<EmailToken>()
+            .Property(token => token.TokenHash)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        modelBuilder.Entity<EmailToken>()
+            .Property(token => token.Purpose)
+            .IsRequired()
+            .HasMaxLength(30);
+
+        modelBuilder.Entity<EmailToken>()
+            .Property(token => token.FailedAttempts)
+            .HasDefaultValue(0);
+
+        modelBuilder.Entity<EmailToken>()
+            .HasIndex(token => token.TokenHash)
+            .IsUnique();
+
+        modelBuilder.Entity<EmailToken>()
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(token => token.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
