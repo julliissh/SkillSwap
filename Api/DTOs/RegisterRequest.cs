@@ -1,9 +1,20 @@
 using System.ComponentModel.DataAnnotations;
+using Common.Entities;
 
 namespace Api.DTOs;
 
 public class RegisterRequest
 {
+    [Required]
+    [MinLength(Profile.MinNameLength)]
+    [MaxLength(Profile.MaxNameLength)]
+    public string FirstName { get; set; } = "";
+
+    [Required]
+    [MinLength(Profile.MinNameLength)]
+    [MaxLength(Profile.MaxNameLength)]
+    public string LastName { get; set; } = "";
+
     [Required]
     [EmailAddress]
     [MaxLength(254)]

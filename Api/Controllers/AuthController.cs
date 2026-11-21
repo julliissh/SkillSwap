@@ -52,6 +52,19 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
+        var firstName = request.FirstName.Trim();
+        var lastName = request.LastName.Trim();
+
+        if (firstName.Length < Profile.MinNameLength || firstName.Length > Profile.MaxNameLength)
+        {
+            return BadRequest(new { message = $"First name must be between {Profile.MinNameLength} and {Profile.MaxNameLength} characters." });
+        }
+
+        if (lastName.Length < Profile.MinNameLength || lastName.Length > Profile.MaxNameLength)
+        {
+            return BadRequest(new { message = $"Last name must be between {Profile.MinNameLength} and {Profile.MaxNameLength} characters." });
+        }
+
         var email = NormalizeEmail(request.Email);
 
         var emailExists = await _dbContext.Users.AnyAsync(u => u.Email == email);
@@ -64,7 +77,12 @@ public class AuthController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Email = email,
-            Profile = new Profile { Id = Guid.NewGuid() }
+            Profile = new Profile
+            {
+                Id = Guid.NewGuid(),
+                FirstName = firstName,
+                LastName = lastName
+            }
         };
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 

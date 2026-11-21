@@ -42,8 +42,14 @@ public class SkillSwapDbContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<Profile>()
-            .Property(p => p.DisplayName)
-            .HasMaxLength(100);
+            .Property(p => p.FirstName)
+            .IsRequired()
+            .HasMaxLength(Profile.MaxNameLength);
+
+        modelBuilder.Entity<Profile>()
+            .Property(p => p.LastName)
+            .IsRequired()
+            .HasMaxLength(Profile.MaxNameLength);
 
         modelBuilder.Entity<Profile>()
             .Property(p => p.Bio)
